@@ -1,38 +1,44 @@
+
 <template>
   <v-app>
     <v-toolbar app>
+      <v-toolbar-side-icon @click.stop="toggleSideMenu"></v-toolbar-side-icon>
       <v-toolbar-title class="headline text-uppercase">
-        <span>Vuetify</span>
-        <span class="font-weight-light">MATERIAL DESIGN</span>
+        <span>マイアドレス帳</span>
       </v-toolbar-title>
       <v-spacer></v-spacer>
-      <v-btn
-        flat
-        href="https://github.com/vuetifyjs/vuetify/releases/latest"
-        target="_blank"
-      >
-        <span class="mr-2">Latest Release</span>
-      </v-btn>
     </v-toolbar>
+    <SideNav/>
 
     <v-content>
-      <HelloWorld/>
+      <router-view/>
     </v-content>
   </v-app>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld'
-
+import firebase from 'firebase'
+import SideNav from './components/SideNav'
+import { mapActions } from 'vuex'
 export default {
   name: 'App',
   components: {
-    HelloWorld
+    SideNav
+  },
+  created () {
+    firebase.auth().onAuthStateChanged(user => {
+      if (user) {
+        this.setLoginUser(user)
+      }
+    })
   },
   data () {
     return {
       //
     }
+  },
+  methods: {
+    ...mapActions(['toggleSideMenu', 'setLoginUser'])
   }
 }
 </script>
